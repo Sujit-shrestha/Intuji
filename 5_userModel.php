@@ -18,16 +18,76 @@
 
         $result = $this->mysqli->query($query);
       
-          $response=  $result->fetch_assoc();
+         echo $response=  $result->fetch_assoc();
           return $response;
 
       }catch (Exception $e){
-        echo "\nException captured: ".$e->getMessage();
+        echo "\nException captured in UserModel/findById: ".$e->getMessage();
       }
-     
-   
+    }
+
+    public function createUser($data){
+      try{
+        
+        if(!$data){
+          throw new InvalidArgumentException("No data sent to insert");
+        }
+      $data = json_decode($data,true);
+        
+        $email = $data["email"];
+        $password = $data["password"];
+        $username = $data["username"];
+        $name= $data["name"];
+        $address = $data["address"];
+        $user_type = $data["user_type"];
+        echo $data;
+
+        $query = "
+        INSERT INTO User 
+        (email , password , username , name, address, user_type) 
+        VALUES ('$email','$password','$username','$name','$address' , '$user_type')
+        ";
+
+        $result = $this->mysqli ->query($query);
+        return $result;
+      
+      }catch (Exception $e){
+        echo "Exception caught in creating user: ".$e->getMessage()."\n";
+      }
+    }
+
+    public function updateUser($id , $data){
+      try{
+        if(!($id ) || !($data )){
+          throw new InvalidArgumentException("User Id or Required data not available");
+        }
+        
+
+        $data = json_decode($data,true);
+        $email = $data["email"];
+        $password = $data["password"];
+        $username = $data["username"];
+        $name = $data["name"];
+        $address = $data["address"];
+        $user_type = $data["user_type"];
+
+        $query = "
+        UPDATE User 
+        set email = '$email' , 
+            password = '$password',
+            username = '$username',
+            name = '$name' , 
+            address = '$address',
+            user_type = '$user_type'
+        WHERE id = '$id'
+            ";
+            $result = $this->mysqli -> query($query);
+            return $result;
+      }catch (Exception $e){
+        echo json_decode(array("error" => $e->getMessage()));
+      }
+    }
 
 
-  }
   }
 ?>
