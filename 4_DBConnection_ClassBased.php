@@ -1,18 +1,13 @@
 <?php
 
 class DbConnection {
-  protected $Servername ;
-  protected $username ;
-  protected $password ;
-  protected $database ;
+  protected $Servername = 'localhost:3000' ;
+  protected $username = 'root';
+  protected $password  = "";
+  protected $database  = 'api_database';
   public $conn =null;
-  
-  public function __construct($hostname , $username , $password , $database){
-    $this->Servername = $hostname;
-    $this->username = $username;
-    $this->password = $password;
-    $this->database = $database;
-
+  //"localhost:3000" , "root" , "" , "api_database"
+  public function __construct(){
     //connect to database
    $this->connection();
   }
