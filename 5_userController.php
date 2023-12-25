@@ -14,7 +14,7 @@ class UserController{
   protected function UserValidator($username , $password) {
    
     if(empty($username) || empty($password)){
-      echo json_encode(array("message"=>"Empty or Invalid email or password"));
+      echo json_encode(array("message"=>"Empty or Invalid username or password"));
     }else{
           $result = $this ->userModel ->authenticateUser($username,$password);
       if($result){
@@ -86,8 +86,6 @@ class UserController{
 
       $data = json_decode($data,true);
 
-
-      //exp-ected is a token from UserValidator
       $authenticationStatus= $this ->UserValidator($data["username"] , $data["password"]); 
      
     if(!$authenticationStatus)  {
@@ -115,6 +113,18 @@ class UserController{
 
   }
 
+  public function handleLogin($username , $password){
+    try{
+
+    if($this->UserValidator($username , $password)){
+      echo json_encode(array("success"=>"Login Successful"));
+    }
+
+    }catch(Exception $e){
+      echo json_encode(array("error"=> $e->getMessage()));
+    }
+  }
+
   public function requestHandler(){
 
     switch( $_SERVER["REQUEST_METHOD"]){
@@ -124,11 +134,18 @@ class UserController{
       break;
 
       case "POST":
-        $data = file_get_contents("php://input");
        
-        $this->addUser($data);
-        
-        break;
+        if(isset($_POST["login"]) && $_POST["login"]=="true"){
+         $this ->handleLogin($_POST["username"] , $_POST["password"]);
+         
+
+        }else{
+          $data = file_get_contents("php://input");
+          $this->addUser($data);
+        }
+      break;
+
+       
 
       case "PUT":
         $data = file_get_contents("php://input");
