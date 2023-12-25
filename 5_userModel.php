@@ -7,6 +7,31 @@
       $this->mysqli = $mysqli;
     }
 
+   public function authenticateUser($username, $password){
+    try{
+     
+      $query = "SELECT id , username , password from User 
+      WHERE username = '$username'";
+
+      $result = $this->mysqli->query($query);
+      if(!$result){
+        throw new Exception("Error executing query.");
+      }
+
+       $DBresponse = $result->fetch_assoc();
+
+       if(password_verify($password , $DBresponse["password"])){
+          return true;
+      }else{
+        throw new Exception("Password/Username did not match.");
+        
+      }
+
+    }catch(Exception $e){
+      echo "Exception encountered ".$e->getMessage();
+    }
+  }
+
     public function findById($id){
       try{
         //id not sent in req 
