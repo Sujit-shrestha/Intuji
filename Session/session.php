@@ -4,21 +4,24 @@
 
   class SessionOperations{
 
+    //constructor initializes the API for inducing endpoints
     public function __construct(){
       $this->startSessionOperations();
     }
 
-   public function basicAuthentication($username , $password){
+    //function for basic authentication
+   private function basicAuthentication($username , $password){
     if($username == 'admin' && $password == 'admin'){
       return true;
     }else{
       return false;
     }
    }
-   protected function randomJob(){
+   //function to perfromn a random task
+   private function randomJob(){
     $p=1;
       while($p!=5){
-        echo $p = rand(1,15);
+        echo "Echo from randomJob function: ". $p = rand(1,15)."\n";
         
       }
       return $p;
@@ -31,35 +34,46 @@
 
             //if username password is sent
             if(isset($_POST["username"]) && isset($_POST["password"])){
+
+              //taking username password from browser
               $username = $_POST["username"];
               $password = $_POST["password"];
 
+              //doing basic authentication
               $this->basicAuthentication($username , $password);
 
+              //starting session
               session_start();
               $_SESSION["username"] = $username;
               $_SESSION["password"] = $password;
               
-              print_r($_SESSION);
-            echo session_status();
-              $result = $this->randomJob();
+             //performing a random  task
+              $result = "Result from random job: " . $this->randomJob();
+
+              //storing the result form task in server's SESSION
               $_SESSION["result"] = $result;
               $_SESSION["sessionId"] = session_id();
             
 
-              //if username password is not sent & sessionId is present
+              //if username OR password is not sent & sessionId is present
             }else if(isset($_COOKIE["PHPSESSID"])){
+
+              //resuming the session or starting a new session
               session_start();
              
-              echo "session is active"."\n";
-            echo $_SESSION["result"];
+              echo "\n"."Session is active"."\n";
+
+              //looking for previously saved session values
+              if(isset($_SESSION["result"])){
+                echo $_SESSION["result"];
+              }
 
             }
             else{
             throw new Exception("Unable to authenticate.");
             }
           }catch(Exception $e){
-            echo "Excep-tion".$e->getMessage();
+            echo "Exception encountered: ".$e->getMessage();
           }
 
         break;
