@@ -109,7 +109,7 @@
             $result = $this->mysqli -> query($query);
             return $result;
       }catch (Exception $e){
-        echo json_decode(array("error" => $e->getMessage()));
+        echo json_encode(array("error" => $e->getMessage()));
       }
     }
 
