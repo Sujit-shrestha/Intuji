@@ -26,6 +26,11 @@
       }
       return $p;
    }
+   private function logout(){
+    setcookie(session_name(),"", time()-60,"/");
+    session_destroy();
+
+   }
    public function startSessionOperations(){
       switch($_SERVER['REQUEST_METHOD']){
         case 'POST':
@@ -62,6 +67,9 @@
               session_start();
              
               echo "\n"."Session is active"."\n";
+
+              $this->logout();
+              
 
               //looking for previously saved session values
               if(isset($_SESSION["result"])){
